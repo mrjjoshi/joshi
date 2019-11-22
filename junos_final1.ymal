@@ -1,0 +1,27 @@
+---
+- name: Get facts
+  hosts: inventory
+  connection: local
+  gather_facts: false
+  
+  roles:
+    - Juniper.junos
+  
+  vars_prompt:
+    - name: ADMUSR
+      prompt: username
+      private: no
+    - name: ADMPASS
+      prompt: Password
+      private: yes
+  
+  tasks:
+    - name: Get junos facts
+      junos_get_facts:
+        host: "{{inventory_hostname}}"
+        user: "{{ADMUSR}}"
+        Password: "{{ADMPASS}}"
+      register: junos
+    - name: print facts
+      debug: 
+        var: junos.facts
